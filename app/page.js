@@ -48,7 +48,7 @@ export default function Home() {
 
   return (
     <div style={style.container}>
-      <h1>ChatGPT Plugins </h1>
+      <h1>ChatGPT Plugins <a href='https://github.com/lolieatapple/chatgpt-plugins.git'><img src="/github.png" width={24} /></a> </h1>
       <h3>total: {plugins.length}</h3>
       <div style={style.search}>
         <input type="text" placeholder="Search for plugins" value={search} onChange={e=>setSearch(e.target.value)} />
