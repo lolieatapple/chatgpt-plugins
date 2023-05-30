@@ -1,95 +1,70 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+
+import { useState } from 'react';
+
+let plugins = require('../assets/plugins.json');
+
+plugins = plugins.items;
+plugins = plugins.map(v => {
+  return {
+    name: v.manifest.name_for_human,
+    description: v.manifest.description_for_human,
+    logo: v.manifest.logo_url,
+  };
+});
 
 export default function Home() {
+  const style = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+    },
+    search: {
+      marginBottom: '20px',
+    },
+    pluginContainer: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+    },
+    pluginCard: {
+      width: '200px',
+      border: '1px solid #ccc',
+      borderRadius: '5px',
+      margin: '10px',
+      padding: '10px',
+      textAlign: 'center',
+    },
+    image: {
+      width: '100%',
+      height: 'auto',
+    },
+  };
+
+  const [search, setSearch] = useState('');
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div style={style.container}>
+      <h1>ChatGPT Plugins </h1>
+      <h3>total: {plugins.length}</h3>
+      <div style={style.search}>
+        <input type="text" placeholder="Search for plugins" value={search} onChange={e=>setSearch(e.target.value)} />
+        <button>Search</button>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div style={style.pluginContainer}>
+        {plugins.filter(v=>{
+          return v.name.toLowerCase().includes(search.toLowerCase()) || v.description.toLowerCase().includes(search.toLowerCase());
+        }).map((plugin, index) => (
+          <div key={index} style={style.pluginCard}>
+            <img width={128} height={128} src={plugin.logo} alt={plugin.name} style={style.image} layout="responsive"/>
+            <h2>{plugin.name}</h2>
+            <p>{plugin.description}</p>
+          </div>
+        ))}
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </div>
+  );
 }
